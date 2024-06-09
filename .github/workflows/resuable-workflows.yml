@@ -1,0 +1,77 @@
+name: Reusable workflow
+
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+    #secrets:
+      #token:
+        #required: true
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ${{ fromJson(inputs.node-version) }}
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    env:
+        SKIP_TEST_NODE_VERSIONS: '["20.x"]'
+
+    steps:
+    - name: Print Build ID
+      run: echo "The Build ID is ${{ github.run_id }}"
+    - name: Checkout 
+      uses: actions/checkout@v3
+    - name: Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        registry-url: https://registry.npmjs.org/
+        cache: 'npm'
+    - name: Install dependencies
+      run: npm ci
+    - name: Test
+      if: ${{ contains(fromJson(env.SKIP_TEST_NODE_VERSIONS), matrix.node-version) }}
+      run: npm test
+    - name: Start Xvfb Server (cypress) # https://docs.cypress.io/guides/continuous-integration/introduction#Dependencies
+      run: Xvfb :99 &
+    - name: E2E:Cypress
+      run: |
+        cd ./demo/cypress-e2e/ 
+        export DISPLAY=:99
+        npm run e2e
+    - name: Stop Xvfb Server (cypress)
+      if: always()
+      run: pkill Xvfb
+    - name: E2E:Puppeteer
+      run: |
+        cd ./demo/puppeteer-e2e/ 
+        npm run e2e
+    - name: Copy Unit Tests Reports
+      if: always()
+      run: |
+        mkdir -p ./deploy-reports/unit-test/
+        cp -r ./unit-test-reports/* ./deploy-reports/unit-test/ 2>/dev/null || true
+    - name: Copy E2E Tests Reports
+      if: always()
+      run: |
+        mkdir -p ./deploy-reports/e2e-test/cypress/
+        cp -r ./demo/cypress-e2e/cypress/reports/* ./deploy-reports/e2e-test/cypress/ 2>/dev/null || true
+        mkdir -p ./deploy-reports/e2e-test/puppeteer/
+        cp -r ./demo/puppeteer-e2e/reports/* ./deploy-reports/e2e-test/puppeteer/ 2>/dev/null || true
+    - name: Generate Unique Artifact Name
+      id: generate-artifact-name
+      run: echo "artifactReportName=parallel-testing-reports-nodejs${{matrix.node-version}}-${{ github.run_id }}" > $GITHUB_OUTPUT
+    - name: Upload Reports
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ steps.generate-artifact-name.outputs.artifactReportName }}
+        path: ./deploy-reports

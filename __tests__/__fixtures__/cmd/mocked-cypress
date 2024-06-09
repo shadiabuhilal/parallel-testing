@@ -1,0 +1,2 @@
+#!/bin/bash 
+echo "[$PARALLEL_TESTING_INSTANCE_NAME] mocked-cypress $@";

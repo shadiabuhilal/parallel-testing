@@ -1,0 +1,17 @@
+.editorconfig
+.github
+.vscode
+.DS_Store
+.gitignore
+/node_modules/
+/artifacts/
+/coverage/
+/unit-test-reports/
+/demo/
+lcov-*
+xunit*
+/__tests__/
+.releaserc.json
+eslint.config.js
+jest.config.js
+README.md
