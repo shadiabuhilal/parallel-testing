@@ -59,6 +59,8 @@ The demo covers how to generate **HTML report** with **screenshots** and **video
 | Parallel | 24.9825s  | 5         |
 
 
+
+
 ![cypress-e2e](https://github.com/shadiabuhilal/parallel-testing/assets/1387462/2221bd91-c957-4a7b-9a8e-3ab38fb4575e)
 
 
@@ -71,6 +73,8 @@ The demo covers how to generate **HTML report** with **screenshots**.
 |----------|-----------|-----------|
 | Serial   | 16.6492s  | 1         |
 | Parallel | 8.8565s   | 5         |
+
+
 
 
 ![puppeteer-e2e](https://github.com/shadiabuhilal/parallel-testing/assets/1387462/25eb61c5-6939-46cf-a770-34ba540c1c9e)
