@@ -50,7 +50,7 @@ Add `@INSTANCE` as a placeholder in the command; it will be replaced with a thre
 
 ### Cypress
 
-Running Cypress e2e tests parallel, please check [Cypress Demo](demo/cypress-e2e).
+Running Cypress e2e tests parallel, please check [Cypress Demo](https://github.com/shadiabuhilal/parallel-testing/tree/main/demo/cypress-e2e).
 The demo covers how to generate **HTML report** with **screenshots** and **videos**.
 
 |  Type    |  Total    | Threads   |
@@ -64,7 +64,7 @@ The demo covers how to generate **HTML report** with **screenshots** and **video
 
 ### Puppeteer
 
-Running Puppeteer e2e tests parallel, please check [Puppeteer Demo](demo/puppeteer-e2e).
+Running Puppeteer e2e tests parallel, please check [Puppeteer Demo](https://github.com/shadiabuhilal/parallel-testing/tree/main/demo/puppeteer-e2e).
 The demo covers how to generate **HTML report** with **screenshots**.
 
 |  Type    |  Total    | Threads   |
