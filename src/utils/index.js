@@ -28,8 +28,10 @@ const validateInput = (value, key, defaultValue) => {
         if (defaultValue) {
             return defaultValue;
         }
+
         throw new Error(`Missing ${key} arg!`);
     }
+
     return value;
 };
 
