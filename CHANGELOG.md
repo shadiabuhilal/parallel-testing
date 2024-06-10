@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/shadiabuhilal/parallel-testing/compare/v1.0.1...v1.0.2) (2024-06-10)
+
+
+### Bug Fixes
+
+* fix license in package.json ([0b0bec4](https://github.com/shadiabuhilal/parallel-testing/commit/0b0bec4d92c36501a5026d9d07833a670866a29f))
+
 ## [1.0.1](https://github.com/shadiabuhilal/parallel-testing/compare/v1.0.0...v1.0.1) (2024-06-10)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "parallel-testing",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "parallel-testing allows the execution of any test frameworks in parallel, dramatically reducing the execution time.",
   "main": "src/index.js",
   "bin": {
