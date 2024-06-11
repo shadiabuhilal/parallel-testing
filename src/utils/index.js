@@ -1,22 +1,27 @@
 const chalk = require('chalk').default;
 const fastGlob = require('fast-glob');
+const getConsoleObj = require('./console');
 
 const prefix = '[PARALLEL-TESTING]:';
 
 const printInfoLog = (title, ...args) => {
-    console.log(chalk.bgBlue.white(prefix), chalk.blue(title), ...args);
+    const consoleOb = getConsoleObj();
+    consoleOb.log(chalk.bgBlue.white(prefix), chalk.blue(title), ...args);
 };
 
 const printWarningLog = (...args) => {
-    console.log(chalk.bgYellow.black(prefix), chalk.yellow(...args));
+    const consoleOb = getConsoleObj();
+    consoleOb.log(chalk.bgYellow.black(prefix), chalk.yellow(...args));
 };
 
 const printErrorLog = (...args) => {
-    console.log(chalk.bgRed.white(prefix), chalk.red(...args));
+    const consoleOb = getConsoleObj();
+    consoleOb.log(chalk.bgRed.white(prefix), chalk.red(...args));
 };
 
 const printSuccessLog = (...args) => {
-    console.log(chalk.bgGreen.white(prefix), chalk.green(...args));
+    const consoleOb = getConsoleObj();
+    consoleOb.log(chalk.bgGreen.white(prefix), chalk.green(...args));
 };
 
 const convertToNDigits = (number, n) => String(number).padStart(n, '0');

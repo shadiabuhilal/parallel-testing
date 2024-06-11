@@ -1,7 +1,23 @@
 const path = require('path');
+const getConsoleObj = require('../../src/utils/console');
 const { convertToNDigits, cleanFolderName, validateInput, calculateFiles } = require('../../src/utils/index');
 
+const debugMode = false; // IMPORTANT: To skip mocking console.log, console.error ...etc.
+
+jest.mock('../../src/utils/console');
+
 describe('Utils', () => {
+
+    beforeEach(() => {
+        getConsoleObj.mockImplementation(() => {
+            return {
+                log: debugMode ? console.log : jest.fn(),
+                error: debugMode ? console.error : jest.fn(),
+                warn: debugMode ? console.warn : jest.fn(),
+                info: debugMode ? console.info : jest.fn()
+            };
+        });
+    });
 
     describe('convertToNDigits', () => {
         it('should convert a number to a string with leading zeros', () => {
