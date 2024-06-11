@@ -215,17 +215,37 @@ const start = async () => {
         }
     }
 
-    const jobResultArr = await afterAllJobAsync({ afterAllCmd });
+    let afterAllJobErr = null;
 
-    const printAfterAllCmdLog = testJobErr ? printErrorLog : printSuccessLog;
-    printAfterAllCmdLog('AFTER TESTING COMMAND:DONE!');
+    try {
+        const afterAllResultArr = await afterAllJobAsync({ afterAllCmd });
 
-    jobResultArr.forEach((exitInfo) => {
-        exitInfoErrorCode({ exitInfo });
-    });
+        const printAfterAllCmdLog = testJobErr ? printErrorLog : printSuccessLog;
+        printAfterAllCmdLog('AFTER TESTING COMMAND:DONE!');
 
+        afterAllResultArr.forEach((exitInfo) => {
+            exitInfoErrorCode({ exitInfo });
+        });
+
+    }
+    catch (errArr) {
+        /* istanbul ignore else */
+        if (Array.isArray(errArr)) {
+            errArr.forEach((exitInfo) => {
+                // IMPORTANT: DONT THROW ERROR AFTER ALL COMMAND.
+                afterAllJobErr = testJobErr || exitInfoErrorCode({ exitInfo, doNotThrowError: true });
+            });
+        }
+    }
+
+    // Throw test job erorr first
     if (testJobErr) {
         throw testJobErr;
+    }
+
+    // Throw after all job erorr second
+    if (afterAllJobErr) {
+        throw afterAllJobErr;
     }
 
     return {

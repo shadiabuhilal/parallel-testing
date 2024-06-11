@@ -17,6 +17,9 @@ const config = {
         'demo'
 
     ],
+    coveragePathIgnorePatterns: [
+        'src/utils/console.js'
+    ],
     coverageDirectory: 'unit-test-reports/coverage',
     reporters: [
         'default',

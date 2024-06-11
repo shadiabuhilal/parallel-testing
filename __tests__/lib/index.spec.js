@@ -1,9 +1,13 @@
 const path = require('path');
 const arg = require('arg');
 const fastGlob = require('fast-glob');
+const getConsoleObj = require('../../src/utils/console');
+
+const debugMode = false; // IMPORTANT: To skip mocking console.log, console.error ...etc.
 
 jest.mock('arg');
 jest.mock('fast-glob');
+jest.mock('../../src/utils/console');
 
 describe('Parallel Testing Script', () => {
     const ARG_UNKNOWN_OPTION = 'ARG_UNKNOWN_OPTION';
@@ -30,6 +34,14 @@ describe('Parallel Testing Script', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        getConsoleObj.mockImplementation(() => {
+            return {
+                log: debugMode ? console.log : jest.fn(),
+                error: debugMode ? console.error : jest.fn(),
+                warn: debugMode ? console.warn : jest.fn(),
+                info: debugMode ? console.info : jest.fn()
+            };
+        });
     });
 
     describe('start', () => {
@@ -228,6 +240,29 @@ describe('Parallel Testing Script', () => {
             await expect(start()).rejects.toThrow(/\[cy instance #(\d{2})\] exited with code 1/);
         });
 
+        it('should throw error when after all commad exit with error code', async () => {
+            expect.assertions(1);
+
+            const threads = 10;
+            const maxThreads = 3;
+
+            arg.mockReturnValue({
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
+                '--task-prefix': 'cy',
+                '--specs': './cypress/e2e/**/*.cy.js',
+                '--specs-separator': ',',
+                '--threads': threads,
+                '--max-threads': maxThreads,
+                '--after-all-cmd': `${cmdDir}/mocked-mochawesome-merge-err ./cypress/reports/**/*.json`
+            });
+
+            fastGlob.sync.mockReturnValue(mocked16FilesList);
+
+            const { start } = require('../../src/lib/index');
+
+            await expect(start()).rejects.toThrow(/\[AFTER ALL CMD\] exited with code 1/);
+        });
+
         it('should throw error when thread is less that 2', async () => {
             expect.assertions(1);
 
@@ -235,7 +270,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--task-prefix': 'cy',
                 '--specs': './cypress/e2e/**/*.cy.js',
                 '--specs-separator': ',',
@@ -308,7 +343,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--specs': './cypress/e2e/**/*.cy.js',
                 '--specs-separator': ',',
                 '--threads': threads,
@@ -330,7 +365,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--task-prefix': 'cy',
                 '--specs-separator': ',',
                 '--threads': threads,
@@ -352,7 +387,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--task-prefix': 'cy',
                 '--specs': './cypress/e2e/**/*.cy.js',
                 '--threads': threads,
@@ -373,7 +408,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--task-prefix': 'cy',
                 '--specs': './cypress/e2e/**/*.cy.js',
                 '--specs-separator': ',',
@@ -418,7 +453,7 @@ describe('Parallel Testing Script', () => {
             const maxThreads = 3;
 
             arg.mockReturnValue({
-                '--test-cmd': `${cmdDir}/mocked-cypress-err run --e2e`,
+                '--test-cmd': `${cmdDir}/mocked-cypress run --e2e`,
                 '--task-prefix': 'cy',
                 '--specs': './cypress/e2e/**/*.cy.js',
                 '--specs-separator': ',',

@@ -1,0 +1,4 @@
+#!/bin/bash 
+echo "mocked-mochawesome-merge  $@";
+echo "Moked Error!"
+exit 1  # Exit with a non-zero status
